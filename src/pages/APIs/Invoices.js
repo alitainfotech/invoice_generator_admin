@@ -15,7 +15,7 @@ const Invoices = () => {
   const [invoices, setInvoices] = useState([])
 
   useEffect(() => {
-    Promise.all([axios.get(`${API}/getCountsOfInvoices  `)]).then(([data1]) =>
+    Promise.all([axios.get(`${API}/getCountsOfInvoices`)]).then(([data1]) =>
       setInvoices(data1.data)
     )
   }, []);
