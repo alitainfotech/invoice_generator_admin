@@ -82,7 +82,6 @@ const Invoices = () => {
             <Col className="col-12">
               <Card>
                 <CardBody>
-                  <Link to="/add-clients" className="btn btn-primary"><i className="mdi mdi-account-plus" /> Add Clients</Link>
                   <CardTitle className="h4" style={{ textAlign: "center" }}>
                     All Invoices
                   </CardTitle>
