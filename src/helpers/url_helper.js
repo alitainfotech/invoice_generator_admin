@@ -6,6 +6,7 @@ export const POST_RESET_PASSWORD = "/users/reset-password"
 export const POST_EDIT_PROFILE = "/users/edit-profile"
 
 export const POST_ADD_CLIENT = "/clients"
+export const POST_ADD_INVOICE = "/invoices"
 
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"

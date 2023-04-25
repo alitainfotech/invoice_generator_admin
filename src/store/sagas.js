@@ -9,6 +9,7 @@ import ProfileSaga from "./auth/profile/saga"
 import LayoutSaga from "./layout/saga"
 import calendarSaga from "./calendar/saga"
 import clientSaga from "./client/saga"
+import invoiceSaga from "./invoice/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -21,5 +22,6 @@ export default function* rootSaga() {
     LayoutSaga(),
     fork(calendarSaga),
     fork(clientSaga),
+    fork(invoiceSaga),
   ])
 }

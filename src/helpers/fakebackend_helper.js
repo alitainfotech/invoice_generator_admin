@@ -33,6 +33,7 @@ const postJwtForgetPwd = data => post(url.POST_FORGET_PASSWORD, data)
 const postJwtResetPwd = data => post(url.POST_RESET_PASSWORD, data)
 
 const postJwtAddClient = data => postFormData(url.POST_ADD_CLIENT, data)
+const postJwtAddInvoice = data => postFormData(url.POST_ADD_INVOICE, data)
 
 // get Events
 export const getEvents = () => get(url.GET_EVENTS)
@@ -64,5 +65,6 @@ export {
   postJwtForgetPwd,
   postJwtProfile,
 
-  postJwtAddClient
+  postJwtAddClient,
+  postJwtAddInvoice
 }

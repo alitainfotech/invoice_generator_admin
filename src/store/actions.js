@@ -12,3 +12,4 @@ export * from "./calendar/actions"
 
 //Clients
 export * from "./client/actions"
+export * from "./invoice/actions"

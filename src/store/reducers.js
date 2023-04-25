@@ -14,6 +14,7 @@ import Profile from "./auth/profile/reducer"
 import calendar from "./calendar/reducer"
 
 import client from "./client/reducer"
+import invoice from "./invoice/reducer"
 
 const rootReducer = combineReducers({
   // public
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
   ResetPassword,
   Profile,
   calendar,
-  client
+  client,
+  invoice
 })
 
 export default rootReducer

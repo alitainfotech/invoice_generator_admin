@@ -2,242 +2,308 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import React, { useState, useEffect } from "react"
 import MetaTags from "react-meta-tags"
-import { Row, Col, Card, CardBody, Container, Alert } from "reactstrap"
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  Container,
+  Alert,
+  Label,
+  Input,
+  Button,
+} from "reactstrap"
 import { AvForm, AvField } from "availity-reactstrap-validation"
 import axios from "axios"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
+import { Formik, Form, Field, FieldArray } from "formik"
 
-import { addClient, addClientFailed } from "../../store/actions"
+import { addInvoice, addInvoiceFailed } from "../../store/actions"
 
 const API = "http://localhost:8000/admin"
 
 const AddInvoice = props => {
-  const [users, setUsers] = useState([]);
-  const [inputs, setInputs] = useState({});
+  const [users, setUsers] = useState([])
+  const [clients, setClients] = useState([])
 
-  const [isValid, setIsValid] = useState(false);
-
-  const [file, setFile] = useState({
-    image_file: null,
-    image_preview: "",
-    formattedSize: "",
-  })
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
-    Promise.all([axios.get(`${API}/getUserName`)]).then(([data1]) =>
-      setUsers(data1.data.data)
-    )
-  }, []);
-
-  useEffect(() => {
-    setIsValid(inputs.user ? true : false);
-  }, [inputs.user]);
-
-  useEffect(() => {
-    props.addClientFailed("")
+    Promise.all([
+      axios.get(`${API}/getUserName`),
+      axios.get(`${API}/getClientName`),
+    ])
+      // .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+      .then(
+        ([data1, data2]) => (
+          setUsers(data1.data.data), setClients(data2.data.data)
+        )
+      )
   }, [])
 
+  useEffect(() => {
+    props.addInvoiceFailed("")
+  }, [])
 
-  const handleValidSubmit = (event, values) => {
-    let formData = new FormData()
-    formData.append("businessNo", inputs.businessNo);
-    formData.append("name", inputs.name);
-    formData.append("email", inputs.email);
-    formData.append("phone", inputs.phone);
-    formData.append("address", inputs.address);
-    formData.append("files", file.image_file);
-    formData.append("user", inputs.user);
-    props.addClient(formData);
+  const handleValidSubmit = values => {
+    values.total = total
+    values.paymentDetails = {
+      amountPaid: values.total,
+      datePaid: new Date(),
+      paymentMethod: "Cash",
+      paidBy: values.client,
+    }
+    props.addInvoice(values)
   }
 
-  const handleChange = event => {
-    let name = event.target.name;
-    let value = event.target.value;
-    setInputs(values => ({ ...values, [name]: value }))
-  };
-
-  function handleAcceptedFiles(event) {
-    let files = event.target.files;
-    let image_as_base64 = URL.createObjectURL(files[0])
-    let image_as_files = files[0]
-    setFile({
-      image_preview: image_as_base64,
-      image_file: image_as_files,
-      formattedSize: formatBytes(image_as_files.size),
-    })
+  const getRandomId = (min = 0, max = 500000) => {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    const num = Math.floor(Math.random() * (max - min + 1)) + min
+    return "INV" + num.toString().padStart(6, "0")
   }
-
-  function formatBytes(bytes, decimals = 2) {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const dm = decimals < 0 ? 0 : decimals
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
-  }
-
 
   return (
     <React.Fragment>
       <div className="page-content">
         <MetaTags>
-          <title>Clients | Invoice - Admin Dashboard</title>
+          <title>Invoice | Invoice - Admin Dashboard</title>
         </MetaTags>
         <div className="container-fluid">
-          <Breadcrumbs maintitle="Dashboard" breadcrumbItem="Clients" />
+          <Breadcrumbs maintitle="Dashboard" breadcrumbItem="Invoice" />
           <Container>
             <Row className="justify-content-center">
               <Col md={8} lg={6} xl={4}>
                 <Card className="overflow-hidden">
                   <CardBody className="p-4">
                     <div className="p-3">
-                      <AvForm
-                        className="mt-4"
-                        onValidSubmit={(e, v) => {
-                          handleValidSubmit(e, v)
+                      <Formik
+                        initialValues={{
+                          invoiceNo: getRandomId(),
+                          client: "",
+                          user: "",
+                          items: [{ itemName: "", unitPrice: "", quantity: 1 }],
+                          balanceDue: 0,
+                          dueDate: new Date().toISOString().substring(0, 10),
+                          note: "",
                         }}
-                      >
-                        {props.user && props.user ? (
-                          <Alert color="success">
-                            Client added successfully!
-                          </Alert>
-                        ) : null}
+                        onSubmit={values => handleValidSubmit(values)}
+                        render={({ handleChange, values, setFieldValue }) => (
+                          <Form>
+                            {props.user && props.user ? (
+                              <Alert color="success">
+                                Invoice added successfully!
+                              </Alert>
+                            ) : null}
 
-                        {props.addingError && props.addingError ? (
-                          <Alert color="danger">{props.addingError}</Alert>
-                        ) : null}
+                            {props.addingError && props.addingError ? (
+                              <Alert color="danger">{props.addingError}</Alert>
+                            ) : null}
 
-                        <div className="mb-3">
-                          <AvField
-                            name="businessNo"
-                            label="Business No."
-                            type="text"
-                            value=""
-                            required
-                            placeholder="Enter Business Number"
-                            onChange={handleChange}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                className="form-control"
+                                name="invoiceNo"
+                                label="Invoice No."
+                                type="text"
+                                value={values.invoiceNo}
+                                readOnly={true}
+                              />
+                            </div>
 
-                        <div className="mb-3">
-                          <AvField
-                            name="name"
-                            label="Name"
-                            type="text"
-                            value=""
-                            required
-                            placeholder="Enter name"
-                            onChange={handleChange}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                as="select"
+                                className="form-control"
+                                name="client"
+                                required
+                              >
+                                <option value="">---Select Client---</option>
+                                {clients.map((item, index) => (
+                                  <option key={index} value={item.id}>
+                                    {item.name} ({item.userId.name})
+                                  </option>
+                                ))}
+                              </Field>
+                            </div>
 
-                        <div className="mb-3">
-                          <AvField
-                            name="email"
-                            label="Email"
-                            type="email"
-                            value=""
-                            required
-                            placeholder="Enter email"
-                            onChange={handleChange}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                as="select"
+                                className="form-control"
+                                name="user"
+                                required
+                              >
+                                <option value="">---Select User---</option>
+                                {users.map((item, index) => (
+                                  <option key={index} value={item.id}>
+                                    {item.name}
+                                  </option>
+                                ))}
+                              </Field>
+                            </div>
 
-                        <div className="mb-3">
-                          <AvField
-                            name="phone"
-                            label="Phone"
-                            type="number"
-                            value=""
-                            required
-                            placeholder="Enter phone number"
-                            onChange={handleChange}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <FieldArray
+                                name="items"
+                                render={arrayHelpers => (
+                                  <div>
+                                    {values.items && values.items.length > 0 ? (
+                                      values.items.map((item, index) => (
+                                        <div key={index} className="row">
+                                          <div className="col-md-5">
+                                            <Field
+                                              className="form-control"
+                                              type="text"
+                                              name={`items.${index}.itemName`}
+                                              placeholder="Item name"
+                                              required
+                                            />
+                                          </div>
+                                          <div className="col-md-4">
+                                            <Field
+                                              className="form-control"
+                                              type="number"
+                                              min="0"
+                                              name={`items.${index}.unitPrice`}
+                                              placeholder="Price"
+                                              required
+                                              handleChange={e =>
+                                                setTotal(
+                                                  total +
+                                                    parseInt(e.target.value)
+                                                )
+                                              }
+                                            />
+                                          </div>
+                                          <div className="col-md-1">
+                                            <button
+                                              className="form-control"
+                                              type="button"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                            >
+                                              -
+                                            </button>
+                                          </div>
+                                          <div className="col-md-1">
+                                            <button
+                                              className="form-control"
+                                              style={{
+                                                backgroundColor: "black",
+                                                color: "white",
+                                              }}
+                                              type="button"
+                                              onClick={() =>
+                                                arrayHelpers.insert(index, "")
+                                              }
+                                            >
+                                              +
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <button
+                                        className="form-control"
+                                        style={{
+                                          backgroundColor: "black",
+                                          color: "white",
+                                        }}
+                                        type="button"
+                                        onClick={() => arrayHelpers.push("")}
+                                      >
+                                        Add item
+                                      </button>
+                                    )}
+                                  </div>
+                                )}
+                              />
+                            </div>
+                            <div className="mb-3">
+                              <Field
+                                className="form-control"
+                                name="total"
+                                label="Total"
+                                type="number"
+                                value={total}
+                                readOnly={true}
+                              />
+                            </div>
 
-                        <div className="mb-3">
-                          <AvField
-                            name="address"
-                            label="Address"
-                            type="textarea"
-                            value=""
-                            required
-                            placeholder="Enter your address"
-                            onChange={handleChange}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                className="form-control"
+                                name="balanceDue"
+                                label="Balance Due"
+                                type="number"
+                                value={values.balanceDue}
+                                readOnly={true}
+                              />
+                            </div>
 
-                        <div className="mb-3">
-                          <AvField
-                            name="files"
-                            label="Select Logo"
-                            type="file"
-                            accept="image/*"
-                            value=""
-                            required
-                            onChange={handleAcceptedFiles}
-                          />
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                className="form-control"
+                                name="dueDate"
+                                label="Due Date"
+                                type="date"
+                                value={values.dueDate}
+                                required
+                                placeholder="Enter Due Date"
+                              />
+                            </div>
 
-                        <div className="mb-3">
-                          <div className="form-group">
-                            <select
-                              className="form-control"
-                              name="user"
-                              onChange={handleChange}
-                              required
-                            >
-                              <option value="">---Select User---</option>
-                              {users.map((item, index) => (
-                                <option key={index} value={item.id}>
-                                  {item.name}
-                                </option>
-                              ))}
-                            </select>
-                            {!isValid && <p>You must choose user</p>}
-                          </div>
-                        </div>
+                            <div className="mb-3">
+                              <Field
+                                className="form-control"
+                                name="note"
+                                label="Note"
+                                type="textarea"
+                                value={values.note}
+                                placeholder="Enter note"
+                              />
+                            </div>
 
-                        <div className="mb-3 row">
-                          <div className="col-12 text-center">
-                            <button
-                              className="btn btn-primary w-md waves-effect waves-light"
-                              type="submit"
-                              disabled={!isValid}
-                            >
-                              Add Client
-                            </button>
-                          </div>
-                        </div>
-                      </AvForm>
+                            <div className="mb-3 row">
+                              <div className="col-12 text-center">
+                                <button
+                                  className="btn btn-primary w-md waves-effect waves-light"
+                                  type="submit"
+                                >
+                                  Add Invoice
+                                </button>
+                              </div>
+                            </div>
+                          </Form>
+                        )}
+                      />
                     </div>
                   </CardBody>
                 </Card>
               </Col>
             </Row>
           </Container>
-
         </div>
-      </div >
-    </React.Fragment >
+      </div>
+    </React.Fragment>
   )
 }
 
-AddClient.propTypes = {
-  addClient: PropTypes.func,
-  addClientFailed: PropTypes.func,
+AddInvoice.propTypes = {
+  addInvoice: PropTypes.func,
+  addInvoiceFailed: PropTypes.func,
   addingError: PropTypes.any,
   user: PropTypes.any,
 }
 
 const mapStatetoProps = state => {
-  const { user, addingError, loading } = state.client
+  const { user, addingError, loading } = state.invoice
   return { user, addingError, loading }
 }
 
 export default connect(mapStatetoProps, {
-  addClient,
-  addClientFailed,
+  addInvoice,
+  addInvoiceFailed,
 })(AddInvoice)
-

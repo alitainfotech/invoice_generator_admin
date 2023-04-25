@@ -17,8 +17,8 @@ import Dashboard from "../pages/Dashboard/index"
 import Users from "../pages/APIs/Users"
 import Clients from "../pages/APIs/Clients"
 import Invoices from "../pages/APIs/Invoices"
-
 import AddClient from "../pages/APIs/AddClient"
+import AddInvoice from "pages/APIs/AddInvoice"
 
 // Profile
 import UserProfile from "../pages/Authentication/user-profile"
@@ -135,6 +135,7 @@ const userRoutes = [
   { path: "/pdf-templates", component: PDFTemplates },
 
   { path: "/add-clients", component: AddClient },
+  { path: "/add-invoices", component: AddInvoice },
 
   // //calendar
   { path: "/calendar", component: Calendar },
