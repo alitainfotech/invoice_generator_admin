@@ -10,9 +10,6 @@ import ForgetPassword from "./auth/forgetpwd/reducer"
 import ResetPassword from "./auth/resetpwd/reducer"
 import Profile from "./auth/profile/reducer"
 
-//Calendar
-import calendar from "./calendar/reducer"
-
 import client from "./client/reducer"
 
 const rootReducer = combineReducers({
@@ -23,8 +20,7 @@ const rootReducer = combineReducers({
   ForgetPassword,
   ResetPassword,
   Profile,
-  calendar,
-  client
+  client,
 })
 
 export default rootReducer
