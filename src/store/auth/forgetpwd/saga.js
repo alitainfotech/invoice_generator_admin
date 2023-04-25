@@ -29,10 +29,10 @@ function* forgetUser({ payload: { user, history } }) {
       const response = yield call(postJwtForgetPwd, {
         email: user.email,
       })
-      if (response.statusCode == 200) {
+      if (response.status) {
         yield put(userForgetPasswordSuccess(response.message))
       } else {
-        yield put(userForgetPasswordError(response.message))
+        yield put(userForgetPasswordError(response.error))
       }
     } else {
       const response = yield call(postFakeForgetPwd, "/fake-forget-pwd", {

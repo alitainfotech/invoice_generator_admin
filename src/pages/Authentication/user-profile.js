@@ -41,8 +41,6 @@ const UserProfile = props => {
     )
   }, [])
 
-  console.log("PROPS: ", props)
-
   // const [email, setemail] = useState("")
   // const [name, setname] = useState("")
   // const [idx, setidx] = useState(1)
@@ -86,10 +84,10 @@ const UserProfile = props => {
           <Row>
             <Col lg="12">
               {props.error && props.error ? (
-                <Alert color="danger">{props.error.message}</Alert>
+                <Alert color="danger">{props.error}</Alert>
               ) : null}
               {props.success ? (
-                <Alert color="success">{props.success.message}</Alert>
+                <Alert color="success">{props.success}</Alert>
               ) : null}
 
               <Card>

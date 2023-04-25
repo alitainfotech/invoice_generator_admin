@@ -27,10 +27,10 @@ function* editProfile({ payload: { user } }) {
         name: user.name,
         token: user.token,
       })
-      if (response.statusCode == 200) {
-        yield put(profileSuccess(response))
+      if (response.status) {
+        yield put(profileSuccess(response.message))
       } else {
-        yield put(profileError(response.message))
+        yield put(profileError(response.error))
       }
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeProfile, {

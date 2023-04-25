@@ -59,7 +59,7 @@ const Dashboard = props => {
   useEffect(() => {
     Promise.all([axios.get(`${API}/getCountsForDashboard`)])
       // .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
-      .then(([data1]) => setData(data1.data))
+      .then(([data1]) => setData(data1.data.data))
   }, [])
 
   return (

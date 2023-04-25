@@ -16,16 +16,25 @@ const Invoices = () => {
 
   useEffect(() => {
     Promise.all([axios.get(`${API}/getCountsOfInvoices`)]).then(([data1]) =>
-      setInvoices(data1.data)
+      setInvoices(data1.data.data)
     )
-  }, []);
+  }, [])
 
-  invoices.forEach((el) => {
+  invoices.forEach(el => {
+    el.invoiceNumber = el.invoiceNumber
+      ? el.invoiceNumber.includes("INV")
+        ? el.invoiceNumber
+        : "INV" + el.invoiceNumber
+      : "-"
     el.access_path = (
-      <a href={el.access_path ? el.access_path : "https://www.google.com/"} target="_blank">Click to see invoice</a>
+      <a
+        href={el.access_path ? el.access_path : "https://www.google.com/"}
+        target="_blank"
+      >
+        Click to see invoice
+      </a>
     )
   })
-
 
   const data = {
     columns: [
@@ -63,8 +72,8 @@ const Invoices = () => {
         label: "Invoice date",
         field: "createdAt",
         sort: "asc",
-        width: 150
-      }
+        width: 150,
+      },
     ],
     rows: invoices,
   }

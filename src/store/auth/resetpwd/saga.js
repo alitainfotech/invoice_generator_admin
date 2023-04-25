@@ -32,10 +32,10 @@ function* resetUser({ payload: { user, history } }) {
           token: user.token,
         })
         if (response) {
-          if (response.statusCode == 200) {
+          if (response.status) {
             yield put(userResetPasswordSuccess(response.message))
           } else {
-            yield put(userResetPasswordError(response.message))
+            yield put(userResetPasswordError(response.error))
           }
         }
       } else {

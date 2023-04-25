@@ -26,7 +26,7 @@ export async function post(url, data, config = {}) {
   return await axiosApi
     .post(url, { ...data }, { ...config })
     .then(response => response.data)
-    .catch(err => err.message)
+    .catch(err => err.response.data)
 }
 
 export async function put(url, data, config = {}) {
@@ -42,8 +42,8 @@ export async function del(url, config = {}) {
 }
 
 export async function postFormData(url, data, config = {}) {
-  return await axiosApi.post(url, data, { 'Content-Type': 'multipart/form-data', ...config })
+  return await axiosApi
+    .post(url, data, { "Content-Type": "multipart/form-data", ...config })
     .then(response => response.data)
-    .catch(err => err.message);
+    .catch(err => err.message)
 }
-

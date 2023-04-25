@@ -14,7 +14,7 @@ const Users = () => {
 
   useEffect(() => {
     Promise.all([axios.get(`${API}/getCountsOfUser`)]).then(([data1]) =>
-      setUsers(data1.data.rows)
+      setUsers(data1.data.data)
     )
   }, [])
 

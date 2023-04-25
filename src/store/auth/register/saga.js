@@ -28,11 +28,11 @@ function* registerUser({ payload: { user } }) {
       const response = yield call(postJwtRegister, {
         ...user,
       })
-      if (response.statusCode == 200) {
-        localStorage.setItem("authUser", JSON.stringify(response.token))
-        yield put(registerUserSuccessful(response))
+      if (response.status) {
+        localStorage.setItem("authUser", JSON.stringify(response.data.token))
+        yield put(registerUserSuccessful(response.data))
       } else {
-        yield put(registerUserFailed(response.message))
+        yield put(registerUserFailed(response.error))
       }
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeRegister, user)

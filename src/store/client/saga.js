@@ -6,9 +6,7 @@ import { addClientSuccessful, addClientFailed } from "./actions"
 
 //Include Both Helper File with needed methods
 // import { getFirebaseBackend } from "../../../helpers/firebase_helper"
-import {
-  postJwtAddClient,
-} from "../../helpers/fakebackend_helper"
+import { postJwtAddClient } from "../../helpers/fakebackend_helper"
 
 // initialize relavant method of both Auth
 // const fireBaseBackend = getFirebaseBackend()
@@ -25,7 +23,7 @@ function* addClients({ payload: { user } }) {
       // yield put(addClientSuccessful(response))
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtAddClient, user)
-      if (response.statusCode == 200) {
+      if (response.status) {
         yield put(addClientSuccessful(response.message))
       } else {
         yield put(addClientFailed(response.message))

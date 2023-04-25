@@ -28,11 +28,11 @@ function* loginUser({ payload: { user, history } }) {
         email: user.email,
         password: user.password,
       })
-      if (response.statusCode == 200) {
-        localStorage.setItem("authUser", JSON.stringify(response.token))
-        yield put(loginSuccess(response.token))
+      if (response.status) {
+        localStorage.setItem("authUser", JSON.stringify(response.data.token))
+        yield put(loginSuccess(response.data.token))
       } else {
-        yield put(apiError(response.message))
+        yield put(apiError(response.error))
       }
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postJwtLogin, {

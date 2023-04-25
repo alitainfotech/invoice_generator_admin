@@ -5,7 +5,7 @@ import MetaTags from "react-meta-tags"
 import { MDBDataTable } from "mdbreact"
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle } from "reactstrap"
 
-import logoDefault from "../../assets/images/bg.jpg";
+import logoDefault from "../../assets/images/bg.jpg"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
@@ -13,23 +13,25 @@ import "./datatables.scss"
 const API = "http://localhost:8000/admin"
 
 const Clients = () => {
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState([])
 
   useEffect(() => {
     Promise.all([axios.get(`${API}/getCountsOfClients`)]).then(([data1]) =>
-      setClients(data1.data.rows)
+      setClients(data1.data.data)
     )
-  }, []);
+  }, [])
 
-
-  clients.forEach((el) => {
+  clients.forEach(el => {
     el.access_path = (
       <img
         src={el.access_path}
         alt="logo"
         width="50px"
         height="50px"
-        onError={(e) => { e.target.onError = null; e.target.src = logoDefault }}
+        onError={e => {
+          e.target.onError = null
+          e.target.src = logoDefault
+        }}
       />
     )
   })
@@ -83,7 +85,9 @@ const Clients = () => {
             <Col className="col-12">
               <Card>
                 <CardBody>
-                  <Link to="/add-clients" className="btn btn-primary"><i className="mdi mdi-account-plus" /> Add Clients</Link>
+                  <Link to="/add-clients" className="btn btn-primary">
+                    <i className="mdi mdi-account-plus" /> Add Clients
+                  </Link>
                   <CardTitle className="h4" style={{ textAlign: "center" }}>
                     Registered Clients
                   </CardTitle>
