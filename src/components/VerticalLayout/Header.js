@@ -86,18 +86,18 @@ const Header = props => {
                 <span className="logo-sm">
                   <img src={logosmImg} alt="" height="22" />
                 </span>
-                <span className="logo-lg">
+                {/* <span className="logo-lg">
                   <img src={logodarkImg} alt="" height="17" />
-                </span>
+                </span> */}
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
                   <img src={logosmImg} alt="" height="22" />
                 </span>
-                <span className="logo-lg">
+                {/* <span className="logo-lg">
                   <img src={logolightImg} alt="" height="18" />
-                </span>
+                </span> */}
               </Link>
             </div>
             <button
@@ -122,7 +122,7 @@ const Header = props => {
           </div>
 
           <div className="d-flex">
-            <form className="app-search d-none d-lg-block">
+            {/* <form className="app-search d-none d-lg-block">
               <div className="position-relative">
                 <input
                   type="text"
@@ -131,7 +131,7 @@ const Header = props => {
                 />
                 <span className="fa fa-search"></span>
               </div>
-            </form>
+            </form> */}
 
             <Dropdown
               className="d-inline-block d-lg-none ms-2"

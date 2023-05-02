@@ -1,5 +1,5 @@
 import React from "react"
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import { FormGroup } from "reactstrap"
 
 import { connect } from "react-redux"
@@ -253,7 +253,7 @@ const RightSidebar = props => {
                 </React.Fragment>
               ) : null}
 
-              <h6 className="text-center">Choose Layouts</h6>
+              {/* <h6 className="text-center">Choose Layouts</h6>
 
               <div className="mb-2">
                 <Link
@@ -288,15 +288,15 @@ const RightSidebar = props => {
                     alt=""
                   />
                 </Link>
-              </div>
+              </div> */}
 
-              <Link
+              {/* <Link
                 to="#"
                 className="btn btn-primary btn-block mt-3"
                 target="_blank"
               >
                 <i className="mdi mdi-cart ms-1" /> Purchase Now
-              </Link>
+              </Link> */}
             </div>
           </div>
         </SimpleBar>
@@ -317,7 +317,7 @@ RightSidebar.propTypes = {
   leftSideBarTheme: PropTypes.any,
   leftSideBarType: PropTypes.any,
   showRightSidebarAction: PropTypes.func,
-  topbarTheme: PropTypes.any
+  topbarTheme: PropTypes.any,
 }
 
 const mapStateToProps = state => {
